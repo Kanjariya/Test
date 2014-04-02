@@ -1,0 +1,55 @@
+testing
+-(void)drawRect:(CGRect)rect
+{
+    /* Loading Settings from Plist file */
+    NSDictionary * plist = [[NSDictionary alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@“MyTabBarSettings" ofType:@"plist"]];
+    NSDictionary * images = [plist objectForKey:@"image_names"];
+    NSDictionary * titleSettings = [plist objectForKey:@"title_labels_settings"];
+    
+    /* Setting Background Image */
+    NSString * imgPathBackground = [[NSBundle mainBundle] pathForResource:[images objectForKey:@"background"] ofType:nil];
+    UIImage * imgBackground = [[UIImage alloc] initWithContentsOfFile:imgPathBackground];
+    UIImageView * imgView = [[UIImageView alloc] initWithImage:imgBackground];
+    [self insertSubview:imgView atIndex:0];
+    
+    /* Setting Tab Items */
+    NSArray * arrItems = [images objectForKey:@"tabitems"];
+    for(int i=0; i<[arrItems count]; i++)
+    {
+        NSDictionary * d = [arrItems objectAtIndex:i];
+        
+        /* Loading Default Image */
+        NSString * imgPathDefault = [[NSBundle mainBundle] pathForResource:[d objectForKey:@"off"] ofType:nil];
+        UIImage * imgDefault = [[UIImage alloc] initWithContentsOfFile:imgPathDefault];
+        
+        /* Loading Selected Image */
+        NSString * imgPathSelected = [[NSBundle mainBundle] pathForResource:[d objectForKey:@"on"] ofType:nil];
+        UIImage * imgSelected = [[UIImage alloc] initWithContentsOfFile:imgPathSelected];
+        
+        /* Setting Images */
+        UITabBarItem * tabBarItem = [self.items objectAtIndex:i];
+        [tabBarItem setFinishedSelectedImage:imgSelected withFinishedUnselectedImage:imgDefault];
+
+        /* Setting Title Attributes */
+        NSString * fontName = [titleSettings objectForKey:@"font_name"];
+        float fontSize = [[titleSettings objectForKey:@"font_size"] floatValue];
+        float vOffset = [[titleSettings objectForKey:@"vertical_offset"] floatValue];
+        float dr = [[[titleSettings objectForKey:@"default_color"] objectForKey:@"r"] floatValue];
+        float dg = [[[titleSettings objectForKey:@"default_color"] objectForKey:@"g"] floatValue];
+        float db = [[[titleSettings objectForKey:@"default_color"] objectForKey:@"b"] floatValue];
+
+        UIColor * colorDefault = [[UIColor alloc] initWithRed:dr/255 green:dg/255 blue:db/255 alpha:1.0];
+
+        [tabBarItem setTitlePositionAdjustment:UIOffsetMake(0, vOffset)];
+        
+        NSMutableDictionary * att = [[NSMutableDictionary alloc] init];
+        
+        [att setObject:[UIFont fontWithName:fontName size:fontSize] forKey:UITextAttributeFont];
+        
+        [att setObject:colorDefault forKey:UITextAttributeTextColor];
+        [tabBarItem setTitleTextAttributes:att forState:UIControlStateNormal];
+        
+        [att setObject:[UIColor whiteColor] forKey:UITextAttributeTextColor];
+        [tabBarItem setTitleTextAttributes:att forState:UIControlStateSelected];
+    }
+}
