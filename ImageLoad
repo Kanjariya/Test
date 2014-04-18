@@ -1,0 +1,36 @@
+-(void) LoadimageForView :(UIImageView *)imgView withUrl :(NSString *)aStrImageUrl{
+    NSString *strPathToSaveImg = [NSString stringWithFormat:@"%@/Library/Caches/",NSHomeDirectory()];
+
+    if (![aStrImageUrl isEqual:@""] && ![aStrImageUrl isKindOfClass:[NSNull class]] && ![aStrImageUrl isEqual:@"<null>"])
+    {
+        NSString *savedImagePath = [strPathToSaveImg stringByAppendingPathComponent:[aStrImageUrl lastPathComponent]];
+        
+        if ([[NSFileManager defaultManager] fileExistsAtPath:savedImagePath]) {
+            UIImage *imgSavedLogo =	[UIImage imageWithContentsOfFile:savedImagePath];
+            [imgView setImage:imgSavedLogo];
+        }
+        else {
+            //Lazyloading start
+            dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
+            dispatch_async(queue, ^{
+                if (![aStrImageUrl isEqual:@""] && ![aStrImageUrl isEqual:@"<null>"]) {
+                    NSURL *aUrlOfImage = [NSURL URLWithString:aStrImageUrl];
+                    NSData *aDataOfImage = [NSData dataWithContentsOfURL:aUrlOfImage];
+                    UIImage *aImage = [UIImage imageWithData:aDataOfImage];
+                    
+                    dispatch_sync(dispatch_get_main_queue(), ^{
+                        if (aImage) {
+                            [imgView setImage:aImage];
+                            
+                            if (![[NSFileManager defaultManager] fileExistsAtPath:strPathToSaveImg])
+                                [[NSFileManager defaultManager] createDirectoryAtPath:strPathToSaveImg withIntermediateDirectories:YES attributes:nil error:nil];
+                            
+                            NSData *imageData = UIImagePNGRepresentation(aImage);
+                            [imageData writeToFile:savedImagePath atomically:NO];
+                        }
+                    });
+                }
+            });
+        }
+    }
+}
