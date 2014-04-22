@@ -1,4 +1,12 @@
-testing
+Tutorials links
+XML Test
+http://www.raywenderlich.com/725/xml-tutorial-for-ios-how-to-read-and-write-xml-documents-with-gdataxml
+
+
+
+
+
+
 -(void)drawRect:(CGRect)rect
 {
     /* Loading Settings from Plist file */
