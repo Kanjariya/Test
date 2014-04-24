@@ -2,7 +2,12 @@ Tutorials links
 XML Test
 http://www.raywenderlich.com/725/xml-tutorial-for-ios-how-to-read-and-write-xml-documents-with-gdataxml
 
+openssl pkcs12 -in Certificates_Dev_Apns.p12 -out Dev_APNS_Pro.pem -nodes -clcerts
+or
+openssl pkcs12 -in server_certificates_bundle_sandbox.p12 -out
+server_certificates_bundle_sandbox.pem -nodes -clcerts
 
+remove files/folders fromsvn find . -name .svn -exec rm -rf {} \;
 
 
 
