@@ -1,0 +1,29 @@
+-(void)viewDidAppear:(BOOL)animated{
+    
+    [NSTimer scheduledTimerWithTimeInterval: 3.0 target: self
+                                                      selector: @selector(doViewAmimation) userInfo: nil repeats: YES];
+}
+
+-(void)doViewAmimation{
+    [btnLogin setFrame:CGRectMake(55, 55, 5, 5)];
+    [self runSpinAnimationOnView:btnLogin duration:1 rotations:2 repeat:0];
+}
+
+- (void) runSpinAnimationOnView:(UIView*)view duration:(CGFloat)duration rotations:(CGFloat)rotations repeat:(float)repeat;
+{
+    
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationDuration:duration];
+    [btnLogin setFrame:CGRectMake(55, 55, 111, 111)];
+    [UIView commitAnimations];
+    
+    
+    CABasicAnimation* rotationAnimation;
+    rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
+    rotationAnimation.toValue = [NSNumber numberWithFloat: M_PI * 2.0 /* full rotation*/ * rotations * duration ];
+    rotationAnimation.duration = duration;
+    rotationAnimation.cumulative = YES;
+    rotationAnimation.repeatCount = repeat;
+    
+    [view.layer addAnimation:rotationAnimation forKey:@"rotationAnimation"];
+}
