@@ -1,0 +1,71 @@
+In .h
+#import <UIKit/UIKit.h>
+#import <MapKit/MapKit.h>
+#import <CoreLocation/CoreLocation.h>
+#import <MobileCoreServices/MobileCoreServices.h>
+
+@interface LoginVC : UIViewController<CLLocationManagerDelegate>{
+    IBOutlet UIButton *btnLogin;
+    CLLocationManager *locationManager;
+    CLLocation *currentLocation;
+}
+
+
+In .m
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    [self CurrentLocationIdentifier];
+}
+
+-(void)CurrentLocationIdentifier
+{
+    locationManager = [CLLocationManager new];
+    locationManager.delegate = self;
+    locationManager.distanceFilter = kCLDistanceFilterNone;
+    locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    [locationManager startUpdatingLocation];
+}
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
+{
+    currentLocation = [locations objectAtIndex:0];
+    [locationManager stopUpdatingLocation];
+    CLGeocoder *geocoder = [[CLGeocoder alloc] init] ;
+    [geocoder reverseGeocodeLocation:currentLocation completionHandler:^(NSArray *placemarks, NSError *error)
+     {
+         if (!(error))
+         {
+             CLPlacemark *placemark = [placemarks objectAtIndex:0];
+             NSString *locatedAt = [[placemark.addressDictionary valueForKey:@"FormattedAddressLines"] componentsJoinedByString:@", "];
+             NSString *Address = [[NSString alloc]initWithString:locatedAt];
+             NSLog(@"Please Check for this , seprated values %@",Address);
+
+             NSString *Area = @"";
+             NSString *Country = @"";
+             @try {
+                 Area = [[NSString alloc]initWithString:placemark.locality];
+                 Country = [[NSString alloc]initWithString:placemark.country];
+             }
+             @catch (NSException *exception) {
+                 Area = @"Unknown";
+                 Country = @"Unknown";
+             }
+             NSString *CountryArea = [NSString stringWithFormat:@"%@, %@, %@",Address, Area,Country];
+             NSLog(@"%@",CountryArea);
+         }
+         else
+         {
+             NSLog(@"Geocode failed with error %@", error);
+         }
+/*---- For more results you can check below property
+          placemark.region);
+          placemark.country);
+          placemark.locality);
+          placemark.name);
+          placemark.ocean);
+          placemark.postalCode);
+          placemark.subLocality);
+          placemark.location);
+          ------*/
+     }];
+}
