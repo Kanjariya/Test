@@ -1,0 +1,15 @@
+Before You do any Changes please make sure that there is not any code issue.
+if issue is with anonymous and google+ as well then there may be some conditional issue woth code or may be parser.
+So make sure you have proper code for all of these same like twitter.
+
+Once you confirm all this stuff please check this links.
+
+http://damir.me/facebook-authentication-in-ios-6
+http://stackoverflow.com/questions/16436299/how-to-fetch-facebook-friends-in-ios-6
+http://stackoverflow.com/questions/13452407/how-to-check-if-facebook-account-exists
+http://codehunk.blogspot.in/2014/01/ios-6-facebook-integration-tutorial-how.html
+
+
+Please check this carefully, And if we have done same like this. And Only FB not worked tho client then we have to user FB library instead of default use.
+
+We will check how to use FB Frameworks for login tonight if needed.
